@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+ <path>jetway_sbgr.ac</path>
+
+ <nasal>
+  <load>
+   if (!contains(globals, "scenery")) globals["scenery"] = {};
+   if (!contains(scenery, "airport")) scenery["airport"] = {};
+   if (!contains(scenery.airport, "jetway")) scenery.airport["jetway"] = [nil];
+
+   if (getprop("/aircraft/jetway-pos/x-tra") or getprop("/aircraft/jetway-pos/y-rot") or getprop("/aircraft/jetway-pos/z-rot") or getprop("/aircraft/jetway-pos/hood-rot"))
+    {
+    scenery.airport.jetway[0] =
+     {
+     door:
+      [
+      # step 1: extend jetway
+      aircraft.door.new("/scenery/airport/jetway[0]/door[0]", math.abs(getprop("aircraft/jetway-pos/x-tra") * 4)),
+
+      # step 2: lower/raise jetway
+      aircraft.door.new("/scenery/airport/jetway[0]/door[1]", math.abs(getprop("aircraft/jetway-pos/y-rot") * 3)),
+
+      # step 3: rotate entrance
+      aircraft.door.new("/scenery/airport/jetway[0]/door[2]", math.abs(getprop("aircraft/jetway-pos/z-rot") * 0.5)),
+
+      # step 4: rotate jetway
+      aircraft.door.new("/scenery/airport/jetway[0]/door[3]", math.abs(getprop("aircraft/jetway-pos/z-rot") * 1)),
+
+      # step 5: extend hood
+      aircraft.door.new("/scenery/airport/jetway[0]/door[4]", math.abs(getprop("aircraft/jetway-pos/hood-rot") * 1))
+      ]
+     };
+    }
+  </load>
+ </nasal>
+
+ <animation>
+  <type>pick</type>
+  <action>
+   <button>0</button>
+   <repeatable>false</repeatable>
+   <binding>
+    <command>nasal</command>
+    <script>
+     # this loop sets the rotation properties to their appropriate values
+     var loop = func
+      {
+      var jetwayXtra = getprop("/aircraft/jetway-pos/x-tra");
+      var jetwayYrot = getprop("/aircraft/jetway-pos/y-rot");
+      var jetwayZrot = getprop("/aircraft/jetway-pos/z-rot");
+      var hoodYrot = getprop("/aircraft/jetway-pos/hood-rot");
+
+      setprop("/scenery/airport/jetway[0]/jetway-x-tra", getprop("/scenery/airport/jetway[0]/door[0]/position-norm") * jetwayXtra);
+      setprop("/scenery/airport/jetway[0]/jetway-y-rot", getprop("/scenery/airport/jetway[0]/door[1]/position-norm") * jetwayYrot);
+      setprop("/scenery/airport/jetway[0]/entrance-z-rot", getprop("/scenery/airport/jetway[0]/door[2]/position-norm") * jetwayZrot);
+      setprop("/scenery/airport/jetway[0]/jetway-z-rot", getprop("/scenery/airport/jetway[0]/door[3]/position-norm") * jetwayZrot);
+      setprop("/scenery/airport/jetway[0]/hood-y-rot", getprop("/scenery/airport/jetway[0]/door[4]/position-norm") * hoodYrot);
+
+      if (getprop("/scenery/airport/jetway[0]/loop-running"))
+       {
+       settimer(loop, 0.05);
+       }
+      };
+
+     if ((getprop("/scenery/airport/jetway[0]/door[0]/position-norm") == 0 and getprop("/scenery/airport/jetway[0]/door[1]/position-norm") == 0 and getprop("/scenery/airport/jetway[0]/door[2]/position-norm") == 0 and getprop("/scenery/airport/jetway[0]/door[3]/position-norm") == 0 and getprop("/scenery/airport/jetway[0]/door[4]/position-norm") == 0) or (getprop("/scenery/airport/jetway[0]/door[0]/position-norm") == 1 and getprop("/scenery/airport/jetway[0]/door[1]/position-norm") == 1 and getprop("/scenery/airport/jetway[0]/door[2]/position-norm") == 1 and getprop("/scenery/airport/jetway[0]/door[3]/position-norm") == 1 and getprop("/scenery/airport/jetway[0]/door[4]/position-norm") == 1))
+      {
+      if (getprop("/aircraft/jetway-pos/x-tra") or getprop("/aircraft/jetway-pos/y-rot") or getprop("/aircraft/jetway-pos/z-rot") or getprop("/aircraft/jetway-pos/hood-rot"))
+       {
+       if (getprop("/scenery/airport/jetway[0]/door[0]/position-norm") == 1)
+        {
+        print("Retracting jetway stage 1");
+        scenery.airport.jetway[0].door[4].toggle();
+
+        settimer(func
+         {
+         print("Retracting jetway stage 2");
+         scenery.airport.jetway[0].door[3].toggle();
+
+         settimer(func
+          {
+          print("Retracting jetway stage 3");
+          scenery.airport.jetway[0].door[2].toggle();
+
+          settimer(func
+           {
+           print("Retracting jetway stage 4");
+           scenery.airport.jetway[0].door[1].toggle();
+
+           settimer(func
+            {
+            print("Retracting jetway stage 5");
+            scenery.airport.jetway[0].door[0].toggle();
+            }, math.abs(getprop("/aircraft/jetway-pos/y-rot") * 3));
+           }, math.abs(getprop("/aircraft/jetway-pos/z-rot") * 0.5));
+          }, math.abs(getprop("/aircraft/jetway-pos/z-rot") * 1));
+         }, math.abs(getprop("/aircraft/jetway-pos/hood-rot") * 1));
+        }
+       else
+        {
+        print("Extending jetway stage 1");
+        scenery.airport.jetway[0].door[0].toggle();
+
+        settimer(func
+         {
+         print("Extending jetway stage 2");
+         scenery.airport.jetway[0].door[1].toggle();
+
+         settimer(func
+          {
+          print("Extending jetway stage 3");
+          scenery.airport.jetway[0].door[2].toggle();
+
+          settimer(func
+           {
+           print("Extending jetway stage 4");
+           scenery.airport.jetway[0].door[3].toggle();
+
+           settimer(func
+            {
+            print("Extending jetway stage 5");
+            scenery.airport.jetway[0].door[4].toggle();
+            }, math.abs(getprop("/aircraft/jetway-pos/z-rot") * 1));
+           }, math.abs(getprop("/aircraft/jetway-pos/z-rot") * 0.5));
+          }, math.abs(getprop("/aircraft/jetway-pos/y-rot") * 3));
+         }, math.abs(getprop("/aircraft/jetway-pos/x-tra") * 4));
+        }
+
+       setprop("/scenery/airport/jetway[0]/loop-running", 1);
+       loop();
+
+       # stop the loop after the complete jetway animation
+       settimer(func
+        {
+        setprop("/scenery/airport/jetway[0]/loop-running", 0);
+        }, math.abs(getprop("aircraft/jetway-pos/x-tra") * 4) + math.abs(getprop("aircraft/jetway-pos/y-rot") * 3) + math.abs(getprop("aircraft/jetway-pos/z-rot") * 0.5) + math.abs(getprop("aircraft/jetway-pos/z-rot") * 1) + math.abs(getprop("aircraft/jetway-pos/hood-rot") * 1));
+       }
+      else
+       {
+       gui.popupTip("Cannot extend jetway, your aircraft does not define positioning information");
+       }
+      }
+    </script>
+   </binding>
+  </action>
+ </animation>
+
+ <animation>
+  <type>rotate</type>
+  <object-name>Tunnel1</object-name>
+  <object-name>Tunnel2</object-name>
+  <object-name>Rotunda2</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <property>/scenery/airport/jetway/jetway-y-rot</property>
+  <factor>-1</factor>
+  <center>
+   <x-m>1.5</x-m>
+   <y-m>0</y-m>
+   <z-m>4</z-m>
+  </center>
+  <axis>
+   <x>0</x>
+   <y>1</y>
+   <z>0</z>
+  </axis>
+ </animation>
+
+ <animation>
+  <type>rotate</type>
+  <object-name>Tunnel1Rotunda</object-name>
+  <object-name>Tunnel1</object-name>
+  <object-name>Tunnel2</object-name>
+  <object-name>Tunnel3</object-name>
+  <object-name>Rotunda2</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <property>/scenery/airport/jetway/jetway-z-rot</property>
+  <factor>1</factor>
+  <center>
+   <x-m>0</x-m>
+   <y-m>0</y-m>
+   <z-m>0</z-m>
+  </center>
+  <axis>
+   <x>0</x>
+   <y>0</y>
+   <z>1</z>
+  </axis>
+ </animation>
+
+ <animation>
+  <type>translate</type>
+  <object-name>Tunnel2</object-name>
+  <object-name>Tunnel3</object-name>
+  <object-name>Rotunda2</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <property>/scenery/airport/jetway/jetway-x-tra</property>
+  <factor>1</factor>
+  <axis>
+   <x>1</x>
+   <y>0</y>
+   <z>0</z>
+  </axis>
+ </animation>
+
+ <animation>
+  <type>rotate</type>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <property>/scenery/airport/jetway/entrance-z-rot</property>
+  <factor>-1</factor>
+  <center>
+   <x-m>19.536</x-m>
+   <y-m>0.081</y-m>
+   <z-m>0</z-m>
+  </center>
+  <axis>
+   <x>0</x>
+   <y>0</y>
+   <z>1</z>
+  </axis>
+ </animation>
+
+ <animation>
+  <type>rotate</type>
+  <object-name>Hood</object-name>
+  <property>/scenery/airport/jetway/hood-y-rot</property>
+  <factor>-1</factor>
+  <center>
+   <x-m>0</x-m>
+   <y-m>2.019</y-m>
+   <z-m>3.852</z-m>
+  </center>
+  <axis>
+   <x>1</x>
+   <y>0</y>
+   <z>0</z>
+  </axis>
+ </animation>
+
+ <!-- Night/day lighting -->
+ <animation>
+  <type>textranslate</type>
+  <object-name>Rotunda1</object-name>
+  <object-name>Tunnel1Rotunda</object-name>
+  <object-name>Tunnel1</object-name>
+  <object-name>Tunnel2</object-name>
+  <object-name>Tunnel3</object-name>
+  <object-name>Rotunda2</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <property>/sim/time/sun-angle-rad</property>
+  <factor>0.3125</factor>
+  <step>1.6</step>
+  <axis>
+   <x>1</x>
+   <y>0</y>
+  </axis>
+ </animation>
+
+ <!-- Make the ground marker and jetway entrance "non-solid" so that the aircraft does not collide with them -->
+ <animation>
+  <object-name>Marker</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <enable-hot type="bool">false</enable-hot>
+ </animation>
+
+</PropertyList>

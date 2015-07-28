@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+	<path>SBGR_Terminal1.ac</path>
+	
+	<animation>
+		<type>material</type>
+		<object-name>guarulhos1</object-name>
+		<condition>
+			<greater-than>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</greater-than>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+		<texture>guarulhosnight1.png</texture>
+	</animation>
+	
+	<animation>
+		<type>material</type>
+		<object-name>guarulhos1</object-name>
+		<condition>
+			<less-than-equals>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</less-than-equals>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>0</red>
+			<green>0</green>
+			<blue>0</blue>
+		</emission>
+		<texture>guarulhosday1</texture>
+	</animation>
+
+<animation>
+		<type>material</type>
+		<object-name>guarulhos2</object-name>
+		<condition>
+			<greater-than>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</greater-than>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+		<texture>guarulhosnight2.png</texture>
+	</animation>
+	
+	<animation>
+		<type>material</type>
+		<object-name>guarulhos2</object-name>
+		<condition>
+			<less-than-equals>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</less-than-equals>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>0</red>
+			<green>0</green>
+			<blue>0</blue>
+		</emission>
+		<texture>guarulhosday2</texture>
+	</animation>
+
+         <animation>
+		<type>material</type>
+		<object-name>guarulhos3</object-name>
+		<condition>
+			<greater-than>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</greater-than>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+		<texture>guarulhosnight3.png</texture>
+	</animation>
+	
+	<animation>
+		<type>material</type>
+		<object-name>guarulhos3</object-name>
+		<condition>
+			<less-than-equals>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</less-than-equals>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>0</red>
+			<green>0</green>
+			<blue>0</blue>
+		</emission>
+		<texture>guarulhosday3</texture>
+	</animation>
+
+  <animation>
+		<type>material</type>
+		<object-name>guarulhos4</object-name>
+		<condition>
+			<greater-than>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</greater-than>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+		<texture>guarulhos4night.png</texture>
+	</animation>
+	
+	<animation>
+		<type>material</type>
+		<object-name>guarulhos4</object-name>
+		<condition>
+			<less-than-equals>
+				<property>/sim/time/sun-angle-rad</property>
+				<value>1.57</value>
+			</less-than-equals>
+		</condition>
+		<global type="bool">true</global>
+		<emission>
+			<red>0</red>
+			<green>0</green>
+			<blue>0</blue>
+		</emission>
+		<texture>guarulhos4</texture>
+	</animation>
+  
+  <!-- Make the ground marker and jetway entrance "non-solid" so that the aircraft does not collide with them -->
+ <animation>
+  <object-name>Marker</object-name>
+  <object-name>Entrance</object-name>
+  <object-name>Hood</object-name>
+  <enable-hot type="bool">false</enable-hot>
+ </animation>
+
+
+</PropertyList>
